@@ -29,7 +29,9 @@ const TodoContainer = () => {
 						onChange={() => changeTodoCompleted(task.id, todoList, setTodoList)}
 					/>
 					<label htmlFor={task.id}>{task.task}</label>
-					<span>X</span>
+					<span onClick={() => handleDelete(task.id, todoList, setTodoList)}>
+						X
+					</span>
 				</div>
 			))}
 			<button onClick={() => filterTasks(todoList, setTodoList, 0)}>All</button>
@@ -43,6 +45,30 @@ const TodoContainer = () => {
 	);
 };
 
+const handleDelete = (id, todoList, setTodoList) => {
+	const updatedTasks = [];
+
+	todoList.tasks.forEach(task => {
+		if (task.id !== id) {
+			updatedTasks.push(task);
+		}
+	});
+
+	// for (let index = 0; index < todoList.tasks.length; index++) {
+	// 	if (todoList.tasks[index].id !== id) {
+	// 		updatedTasks.push(todoList.tasks[index]);
+	// 	}
+	// }
+
+	// const updatedTasks2 = todoList.tasks.filter(task => task.id !== id);
+
+	setTodoList({
+		tasks: updatedTasks,
+
+		tasksToRender: updatedTasks
+	});
+};
+
 const handleSubmit = (event, todoList, setTodoList) => {
 	event.preventDefault();
 	const newTask = {
@@ -52,7 +78,8 @@ const handleSubmit = (event, todoList, setTodoList) => {
 	};
 	setTodoList({
 		tasks: [...todoList.tasks, newTask],
-		tasksToRender: [...todoList.tasksToRender, newTask]
+
+		tasksToRender: [...todoList.tasks, newTask]
 	});
 	event.target.reset();
 };
@@ -75,6 +102,7 @@ const changeTodoCompleted = (id, todoList, setTodoList) => {
 
 const filterTasks = (todoList, setTodoList, filter) => {
 	let filteredTasks = [...todoList.tasks];
+
 	switch (filter) {
 		case 1:
 			filteredTasks = todoList.tasks.filter(task => task.completed);
